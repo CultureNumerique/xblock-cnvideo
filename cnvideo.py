@@ -16,7 +16,7 @@ class CNVideoBlock(XBlock):
     href = String(help="URL of the video link at the provider", default=None, scope=Scope.content)
     maxwidth = Integer(help="Max width of the video", default="480", scope=Scope.content)
     maxheight = Integer(help="Max height of the video", default="270", scope=Scope.content)
-    
+    watched_count = Integer(help="Number of times the video has been watched", default=0, scope=Scope.user_state)
     
     def student_view(self, context):
         """
@@ -31,6 +31,17 @@ class CNVideoBlock(XBlock):
         # Retrieve HTML code for video iframe 
         html_code = pkg_resources.resource_string(__name__, "static/html/cnvideo.html")
         frag = Fragment(unicode(html_code).format(self=self, embed_code=embed_code))
+        
+        # Load CSS
+        css_str = pkg_resources.resource_string(__name__, "static/css/cnvideo.css")
+        frag.add_css(unicode(css_str))
+        
+        # Load vimeo JS API and custom js for watching views
+        if provider == "vimeo.com":
+            frag.add_javascript_url("//f.vimeocdn.com/js/froogaloop2.min.js")
+            js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo.js")
+            frag.add_javascript(unicode(js_str))
+            frag.initialize_js("CNVideoBlock")
         
         return frag
         
@@ -68,7 +79,17 @@ class CNVideoBlock(XBlock):
         
         res = r.json()
         return hostname, res['html']
-        
+    
+    @XBlock.json_handler
+    def mark_as_watched(self, data, suffix=''):
+        """
+        (Vimeo only) Method called each time the video has been watched using Froogaloop API
+        see static/js/cnvideo.js
+        """
+        if data.get('watched'):
+            self.watched_count+=1
+            
+        return {'watched_count': self.watched_count}
         
     @staticmethod
     def workbench_scenarios():
