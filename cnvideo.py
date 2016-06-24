@@ -70,6 +70,18 @@ class CNVideoBlock(XBlock):
         return hostname, res['html']
         
         
+    @staticmethod
+    def workbench_scenarios():
+        """A canned scenario for display in the workbench."""
+        return [
+            ("CN video",
+            """
+            <vertical_demo>
+                <cnvideo href="https://vimeo.com/122104210" maxwidth="800" />
+            </vertical_demo>
+            """)
+        ]
+    
         
         
         
