@@ -50,7 +50,7 @@ class CNVideoBlock(XBlock):
         """
         parses a given url and retrieve embed code
         """
-        hostname = (url and urlparse(url).hostname)
+        hostname = url and urlparse(url).hostname
         # check provider is supported
         if hostname == "vimeo.com":
             oembed_url = 'https://vimeo.com/api/oembed.json'
