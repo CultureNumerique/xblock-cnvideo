@@ -45,7 +45,22 @@ class CNVideoBlock(XBlock):
         
         return frag
         
+    def studio_view(self, context):
+        """
+        Allows to edit cnvideo components
+        """
+        html_code = pkg_resources.resource_string(__name__, "static/html/cnvideo_edit.html")
+        href = self.href or ''
+        frag = Fragment(unicode(html_code).format(href=href, maxwidth=self.maxwidth, maxheight=self.maxheight))
         
+        js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo_edit.js")
+        frag.add_javascript(unicode(js_str))
+        frag.initialize_js('cnVideoEditBlock')
+        
+        return frag
+        
+        
+    
     def get_embed_code_for_url(self, url):
         """
         parses a given url and retrieve embed code
@@ -91,6 +106,17 @@ class CNVideoBlock(XBlock):
             
         return {'watched_count': self.watched_count}
         
+    @XBlock.json_handler
+    def studio_save(self, data, suffix=''):
+        """
+        Handles save action in the EdxStudio edit form
+        """
+        self.href = data.get('href')
+        self.maxwidth = data.get('maxwidth')
+        self.maxheight = data.get('maxheight')
+        
+        return {'result': 'success'}
+    
     @staticmethod
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
