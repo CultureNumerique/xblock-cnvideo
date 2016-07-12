@@ -29,17 +29,17 @@ class CNVideoBlock(XBlock):
         provider, embed_code = self.get_embed_code_for_url(self.href)
         
         # Retrieve HTML code for video iframe 
-        html_code = pkg_resources.resource_string(__name__, "cnvideo/static/html/cnvideo.html")
+        html_code = pkg_resources.resource_string(__name__, "static/html/cnvideo.html")
         frag = Fragment(unicode(html_code).format(self=self, embed_code=embed_code))
         
         # Load CSS
-        css_str = pkg_resources.resource_string(__name__, "cnvideo/static/css/cnvideo.css")
+        css_str = pkg_resources.resource_string(__name__, "static/css/cnvideo.css")
         frag.add_css(unicode(css_str))
         
         # Load vimeo JS API and custom js for watching views
         if provider == "vimeo.com":
             frag.add_javascript_url("//f.vimeocdn.com/js/froogaloop2.min.js")
-            js_str = pkg_resources.resource_string(__name__, "cnvideo/static/js/cnvideo.js")
+            js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo.js")
             frag.add_javascript(unicode(js_str))
             frag.initialize_js("CNVideoBlock")
         
@@ -49,11 +49,11 @@ class CNVideoBlock(XBlock):
         """
         Allows to edit cnvideo components
         """
-        html_code = pkg_resources.resource_string(__name__, "cnvideo/static/html/cnvideo_edit.html")
+        html_code = pkg_resources.resource_string(__name__, "static/html/cnvideo_edit.html")
         href = self.href or ''
         frag = Fragment(unicode(html_code).format(href=href, maxwidth=self.maxwidth, maxheight=self.maxheight))
         
-        js_str = pkg_resources.resource_string(__name__, "cnvideo/static/js/cnvideo_edit.js")
+        js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo_edit.js")
         frag.add_javascript(unicode(js_str))
         frag.initialize_js('cnVideoEditBlock')
         
