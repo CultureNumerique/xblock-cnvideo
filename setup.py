@@ -12,7 +12,7 @@ def package_data(pkg, root):
 
 setup(
     name='xblock-cnvideo',
-    version='0.1.4-alpha',
+    version='0.1.4.2',
     description='plugin pour importer des videos dans un cours',
     #py_modules=['cnvideo'],
     packages=['cnvideo'],
