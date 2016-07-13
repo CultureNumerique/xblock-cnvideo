@@ -41,7 +41,7 @@ class CNVideoBlock(XBlock):
             frag.add_javascript_url("//f.vimeocdn.com/js/froogaloop2.min.js")
             js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo.js")
             frag.add_javascript(unicode(js_str))
-            frag.initialize_js("CNVideoBlock")
+            frag.initialize_js("cnVideoBlock")
         
         return frag
         

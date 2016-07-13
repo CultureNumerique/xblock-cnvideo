@@ -55,4 +55,4 @@ Go to `Settings -> Advanced Settings` and set `advanced_modules` to `["cnvideo"]
 ### Use it in a unit ###
 Select `Advanced -> cnvideo` in your unit.
 
-
+### Update
