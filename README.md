@@ -1,9 +1,10 @@
 xblock-cnvideo
 --------------
 
-This python package is meant to be used as a Xblock Component for OpenEDX LMS and Studio
+This python package is meant to be used as an Xblock Component for OpenEDX LMS and Studio. It's purpose is to allow embedding a video hosted on [Vimeo](https://vimeo.com) so far, but we plan on allowing also videos hosted on [canal-u.tv](http://canal-u.tv) (a french academic web tv).
 
-It is developped and maintained at Univerisité de Lille by the team of the project [Culture Numérique](https://culturenumerique.univ-lille3.fr/)
+It is developped and maintained at Université de Lille by the team of the project [Culture Numérique](https://culturenumerique.univ-lille3.fr/)
+
 
 # Installation instruction
 
@@ -13,9 +14,9 @@ It depends wether you need to install it in a [DevStack](https://openedx.atlassi
 
 ## Install on FullStack (production-like environnement)
 
-Several ways of installing a new Xblock on FullStack are documented, but the recommended way is [this one](https://github.com/edx/edx-platform/wiki/Installing-a-new-XBlock), but with the following changes.
+Several ways of installing a new Xblock on FullStack are documented. We recommend [this one](https://github.com/edx/edx-platform/wiki/Installing-a-new-XBlock) but with the following changes:
  
- ### Allow All Advanced Components (first time only)
+### Allow All Advanced Components (first time only)
  
 - Manually edit the custom settings in /edx/app/edxapp/cms.env.json. 
 - Look for attribute "FEATURES", instead of "EDXAPP_FEATURES", and add an item to it:
