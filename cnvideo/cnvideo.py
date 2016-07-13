@@ -41,7 +41,7 @@ class CNVideoBlock(XBlock):
             frag.add_javascript_url("//f.vimeocdn.com/js/froogaloop2.min.js")
             js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo.js")
             frag.add_javascript(unicode(js_str))
-            frag.initialize_js("CNVideoBlock")
+            frag.initialize_js("cnVideoBlock")
         
         return frag
         
@@ -99,7 +99,7 @@ class CNVideoBlock(XBlock):
     def mark_as_watched(self, data, suffix=''):
         """
         (Vimeo only) Method called each time the video has been watched using Froogaloop API
-        see static/js/cnvideo.js
+        see cnvideo/static/js/cnvideo.js
         """
         if data.get('watched'):
             self.watched_count+=1
