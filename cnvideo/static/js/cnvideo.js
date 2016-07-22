@@ -1,7 +1,7 @@
 function cnVideoBlock (runtime, element){
     var iframe = $('.cnvideo iframe'),
         player = $f(iframe[0]),
-        watched_count = $('.cnvideo .watched_tracker .watched_count')
+        watched_count = $('.watched_tracker .watched_count')
     
     console.log("Initialiazed cnVideoBlock !")
     function onFinish (video) {

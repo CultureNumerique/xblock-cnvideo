@@ -1,3 +1,4 @@
+from __future__ import division
 import pkg_resources
 import requests
 
@@ -6,6 +7,8 @@ from urlparse import urlparse
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment 
+
+
 
 class CNVideoBlock(XBlock):
     """
@@ -26,7 +29,7 @@ class CNVideoBlock(XBlock):
         Returns a `Fragment` object specifying the HTML, CSS, and JavaScript
         to display.
         """
-        provider, embed_code = self.get_embed_code_for_url(self.href)
+        provider, embed_code, ratio = self.get_embed_code_for_url(self.href)
         
         # Retrieve HTML code for video iframe 
         html_code = pkg_resources.resource_string(__name__, "static/html/cnvideo.html")
@@ -34,7 +37,8 @@ class CNVideoBlock(XBlock):
         
         # Load CSS
         css_str = pkg_resources.resource_string(__name__, "static/css/cnvideo.css")
-        frag.add_css(unicode(css_str))
+        css_str = unicode(css_str).replace("56.25", unicode(ratio))
+        frag.add_css(css_str)
         
         # Load vimeo JS API and custom js for watching views
         if provider == "vimeo.com":
@@ -81,8 +85,6 @@ class CNVideoBlock(XBlock):
         params = {
             'url': url,
             'format':'json',
-            # 'maxwidth':self.maxwidth,
-            # 'maxheight':self.maxheight,
             'api':True 
         }
         
@@ -93,7 +95,9 @@ class CNVideoBlock(XBlock):
             return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
         
         res = r.json()
-        return hostname, res['html']
+        embed_code = res['html']
+        ratio = str(float((res['height']/res['width'])*100))
+        return hostname, embed_code, ratio
     
     @XBlock.json_handler
     def mark_as_watched(self, data, suffix=''):
@@ -124,7 +128,7 @@ class CNVideoBlock(XBlock):
             ("CN video",
             """
             <vertical_demo>
-                <cnvideo href="https://vimeo.com/122104210" />
+                <cnvideo href="https://vimeo.com/11691174" />
             </vertical_demo>
             """)
         ]
