@@ -14,8 +14,8 @@ class CNVideoBlock(XBlock):
     """
     
     href = String(help="URL of the video link at the provider", default=None, scope=Scope.content)
-    maxwidth = Integer(help="Max width of the video", default="480", scope=Scope.content)
-    maxheight = Integer(help="Max height of the video", default="270", scope=Scope.content)
+    #maxwidth = String(help="Max width of the video", default="890", scope=Scope.content)
+    #maxheight = String(help="Max height of the video", default="1000", scope=Scope.content)
     watched_count = Integer(help="Number of times the video has been watched", default=0, scope=Scope.user_state)
     
     def student_view(self, context):
@@ -81,8 +81,8 @@ class CNVideoBlock(XBlock):
         params = {
             'url': url,
             'format':'json',
-            'maxwidth':self.maxwidth,
-            'maxheight':self.maxheight,
+            # 'maxwidth':self.maxwidth,
+            # 'maxheight':self.maxheight,
             'api':True 
         }
         
@@ -124,7 +124,7 @@ class CNVideoBlock(XBlock):
             ("CN video",
             """
             <vertical_demo>
-                <cnvideo href="https://vimeo.com/122104210" maxwidth="800" />
+                <cnvideo href="https://vimeo.com/122104210" />
             </vertical_demo>
             """)
         ]
