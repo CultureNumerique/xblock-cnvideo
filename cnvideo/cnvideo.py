@@ -67,35 +67,30 @@ class CNVideoBlock(XBlock):
         parses a given url and retrieve embed code
         """
         hostname = url and urlparse(url).hostname
-        # check provider is supported
+        # VIMEO case
         if hostname == "vimeo.com":
-            oembed_url = 'https://vimeo.com/api/oembed.json'
+            # For vimeo videos, use OEmbed API
+            params = { 'url': url, 'format':'json', 'api':True }
+            try:
+                r = requests.get('https://vimeo.com/api/oembed.json', params=params)
+                r.raise_for_status()
+            except Exception as e:
+                return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
+            res = r.json()
+            return hostname, res['html']
             
-        elif hostname == "canal-u.tv":
+        # CanalU.tv
+        elif hostname == "www.canal-u.tv":
             # build embed url from template
             # ex : https://www.canal-u.tv/video/universite_de_tous_les_savoirs/pourquoi_il_fait_nuit.1207 == hostname/video/[channel]/[videoname] 
-            return hostname, '<p>Support for Canal-u.tv coming soon...({0})</p>'.format(hostname)
+            embed_code = """<iframe src="{0}/embed.1/{1}?width=100%&amp;height=100%&amp" width="550" height="306" frameborder="0" allowfullscreen scrolling="no"></iframe>""".format(url.rsplit('/', 1)[0],url.split('/')[-1])
+            return hostname, embed_code
+        
+        # not supported
         else:
             return hostname, '<p>Unsupported video provider ({0})</p>'.format(hostname)
         
-        # For vimeo videos, use OEmbed API
-        params = {
-            'url': url,
-            'format':'json',
-            'api':True 
-        }
         
-        try:
-            r = requests.get(oembed_url, params=params)
-            r.raise_for_status()
-        except Exception as e:
-            return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
-        
-        res = r.json()
-        embed_code = res['html']
-        
-        return hostname, embed_code
-    
     @XBlock.json_handler
     def mark_as_watched(self, data, suffix=''):
         """
@@ -123,7 +118,7 @@ class CNVideoBlock(XBlock):
             ("CN video",
             """
             <vertical_demo>
-                <cnvideo href="https://vimeo.com/122104210" />
+                <cnvideo href="http://www.canal-u.tv/video/universite_paris_diderot/13min_qui_suis_je_entre_genetique_et_epigenetique_jonathan_weitzman.12437" />
             </vertical_demo>
             """)
         ]
