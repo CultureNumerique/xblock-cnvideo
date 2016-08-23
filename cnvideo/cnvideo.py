@@ -1,3 +1,4 @@
+from __future__ import division
 import pkg_resources
 import requests
 
@@ -7,15 +8,15 @@ from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment 
 
+
+
 class CNVideoBlock(XBlock):
     """
     An XBlock to deal with videos imported in Culture Numerique online courses
     Aims at supporting vimeo<http://vimeo.com> and CanalU <https://www.canal-u.tv/> videos
     """
     
-    href = String(help="URL of the video link at the provider", default=None, scope=Scope.content)
-    maxwidth = Integer(help="Max width of the video", default="480", scope=Scope.content)
-    maxheight = Integer(help="Max height of the video", default="270", scope=Scope.content)
+    href = String(help="URL of the video link at the provider", default="https://vimeo.com/122104210", scope=Scope.content)
     watched_count = Integer(help="Number of times the video has been watched", default=0, scope=Scope.user_state)
     
     def student_view(self, context):
@@ -34,7 +35,7 @@ class CNVideoBlock(XBlock):
         
         # Load CSS
         css_str = pkg_resources.resource_string(__name__, "static/css/cnvideo.css")
-        frag.add_css(unicode(css_str))
+        frag.add_css(css_str)
         
         # Load vimeo JS API and custom js for watching views
         if provider == "vimeo.com":
@@ -51,7 +52,7 @@ class CNVideoBlock(XBlock):
         """
         html_code = pkg_resources.resource_string(__name__, "static/html/cnvideo_edit.html")
         href = self.href or ''
-        frag = Fragment(unicode(html_code).format(href=href, maxwidth=self.maxwidth, maxheight=self.maxheight))
+        frag = Fragment(unicode(html_code).format(href=href))
         
         js_str = pkg_resources.resource_string(__name__, "static/js/cnvideo_edit.js")
         frag.add_javascript(unicode(js_str))
@@ -81,8 +82,6 @@ class CNVideoBlock(XBlock):
         params = {
             'url': url,
             'format':'json',
-            'maxwidth':self.maxwidth,
-            'maxheight':self.maxheight,
             'api':True 
         }
         
@@ -93,7 +92,9 @@ class CNVideoBlock(XBlock):
             return hostname, '<p>Error getting video from provider ({error})</p>'.format(error=e)
         
         res = r.json()
-        return hostname, res['html']
+        embed_code = res['html']
+        
+        return hostname, embed_code
     
     @XBlock.json_handler
     def mark_as_watched(self, data, suffix=''):
@@ -112,8 +113,6 @@ class CNVideoBlock(XBlock):
         Handles save action in the EdxStudio edit form
         """
         self.href = data.get('href')
-        self.maxwidth = data.get('maxwidth')
-        self.maxheight = data.get('maxheight')
         
         return {'result': 'success'}
     
@@ -124,11 +123,8 @@ class CNVideoBlock(XBlock):
             ("CN video",
             """
             <vertical_demo>
-                <cnvideo href="https://vimeo.com/122104210" maxwidth="800" />
+                <cnvideo href="https://vimeo.com/122104210" />
             </vertical_demo>
             """)
         ]
     
-        
-        
-        
